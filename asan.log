@@ -1,0 +1,59 @@
+=================================================================
+==233827==ERROR: AddressSanitizer: stack-buffer-overflow on address 0x7fff0a7dd784 at pc 0x7fe8c2e8f59d bp 0x7fff0a7dd380 sp 0x7fff0a7dcb28
+WRITE of size 528 at 0x7fff0a7dd784 thread T0
+    #0 0x7fe8c2e8f59c in __interceptor_fread ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:989
+    #1 0x7fe8c2d70a67 in _ksba_reader_read (/crypto/libksba-1.6.1/src/.libs/libksba.so.8+0x1ca67)
+    #2 0x7fe8c2dc0677 in read_buffer (/crypto/libksba-1.6.1/src/.libs/libksba.so.8+0x6c677)
+    #3 0x7fe8c2dc244f in parse_to_next_update (/crypto/libksba-1.6.1/src/.libs/libksba.so.8+0x6e44f)
+    #4 0x7fe8c2dc7a5c in _ksba_crl_parse (/crypto/libksba-1.6.1/src/.libs/libksba.so.8+0x73a5c)
+    #5 0x7fe8c2d6e734 in ksba_crl_parse (/crypto/libksba-1.6.1/src/.libs/libksba.so.8+0x1a734)
+    #6 0x5557991d4eed in one_file (/crypto/libksba-1.6.1/tests/t-crl-parser+0x4eed)
+    #7 0x5557991d6694 in main (/crypto/libksba-1.6.1/tests/t-crl-parser+0x6694)
+    #8 0x7fe8c2b63082 in __libc_start_main ../csu/libc-start.c:308
+    #9 0x5557991d36ad in _start (/crypto/libksba-1.6.1/tests/t-crl-parser+0x36ad)
+
+Address 0x7fff0a7dd784 is located in stack of thread T0 at offset 692 in frame
+    #0 0x7fe8c2dc1597 in parse_to_next_update (/crypto/libksba-1.6.1/src/.libs/libksba.so.8+0x6d597)
+
+  This frame has 4 object(s):
+    [32, 33) 'tmp' (line 855)
+    [48, 56) 'nread' (line 785)
+    [80, 152) 'ti' (line 780)
+    [192, 692) 'tmpbuf' (line 784) <== Memory access at offset 692 overflows this variable
+HINT: this may be a false positive if your program uses some custom stack unwind mechanism, swapcontext or vfork
+      (longjmp and C++ exceptions *are* supported)
+SUMMARY: AddressSanitizer: stack-buffer-overflow ../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:989 in __interceptor_fread
+Shadow bytes around the buggy address:
+  0x1000614f3aa0: 00 f2 f2 f2 00 00 00 00 00 00 00 00 00 f2 f2 f2
+  0x1000614f3ab0: f2 f2 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000614f3ac0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000614f3ad0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000614f3ae0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+=>0x1000614f3af0:[04]f3 f3 f3 f3 f3 f3 f3 f3 f3 00 00 00 00 00 00
+  0x1000614f3b00: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04 f3 f3 f3
+  0x1000614f3b10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  0x1000614f3b20: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 f1 f1 04 f2
+  0x1000614f3b30: 04 f2 04 f2 00 f2 f2 f2 00 f2 f2 f2 00 f2 f2 f2
+  0x1000614f3b40: 00 f2 f2 f2 00 f2 f2 f2 00 f2 f2 f2 00 f2 f2 f2
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+  Shadow gap:              cc
+==233827==ABORTING
+
